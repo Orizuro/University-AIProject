@@ -1,0 +1,34 @@
+Store every (95 or x) number of population
+
+Initial Population
+
+
+Fitness Function
+    Total of balls that hit the brick divided by the total of the baals that hit y = 0 ;
+
+Mutation Algorithm
+
+    1.Selection
+        Depends of the fitness
+
+    2.CrossOver
+    [fitness: 0-80]
+        Tournament Selection{
+            • São selecionados K indíviduos de uma população de forma aleatória
+            • Os melhores x desses serão progenitores
+            • Repete-se o processo para selecionar o novo progenitor.
+            (Slide 9 do PPT aula 20)
+        }
+    [fitness: 80-100]
+        Rank Selection{
+            • Usado principlamente quando os valores de fitness dos indivíduos estão muito próximos (O que
+            acontece tipicamente no fim da procura).
+            • A roleta terá regiões iguais para cada indvíduo, o que significa que cada um pode ser selecionado com a mesma
+            probabilidade.
+            • Abordagem pouco elitista.
+        }
+
+
+    3.Mutation
+        Scramble Mutation
+        10 to 20 % of the array in a random location
