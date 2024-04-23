@@ -1,4 +1,4 @@
-package ffn;
+package ffnn;
 import java.util.Arrays;
 import java.util.Random;
 //1. Initialization

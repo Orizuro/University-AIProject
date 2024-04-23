@@ -1,4 +1,4 @@
-package ffn;
+package ffnn;
 import java.io.*;
 
 public class ffnnFile {

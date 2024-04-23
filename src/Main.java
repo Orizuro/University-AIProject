@@ -1,7 +1,7 @@
 import breakout.Breakout;
 import breakout.BreakoutBoard;
-import ffn.ffnn;
-import ffn.ffnnFile;
+import ffnn.ffnn;
+import ffnn.ffnnFile;
 import utils.GameController;
 
 import java.io.File;
