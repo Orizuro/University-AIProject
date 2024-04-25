@@ -3,6 +3,7 @@ import breakout.BreakoutBoard;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 import static java.lang.Math.exp;
@@ -21,14 +22,15 @@ import static java.lang.Math.exp;
 //6. Save/Load Model
 //Save Model: Function to save the model's architecture and weights.
 //Load Model: Function to load a saved model.
-public class ffnn {
-    private int inputDimension;
-    private int hiddenDimension;
-    private int outputDimension;
-    private double[][] hiddenWeights;
-    private double[] hiddenBiases;
-    private double[][] outputWeights;
-    private double[] outputBiases;
+public class ffnn implements Comparable<ffnn> {
+    public final int inputDimension;
+    public final int hiddenDimension;
+    public final int outputDimension;
+    public double[][] hiddenWeights;
+    public double[] hiddenBiases;
+    public double[][] outputWeights;
+    public double[] outputBiases;
+    public double fitness = 0.0;
 
     double randomLeftBoundary = -1;
     double randomRightBoundary = 1;
@@ -43,6 +45,16 @@ public class ffnn {
         this.hiddenDimension = hiddenDimension;
         this.outputDimension = outputDimension;
         initializeWithRandomValues();
+    }
+
+    public ffnn(double[][] hiddenWeights,double[] hiddenBiases,double[][] outputWeights, double[] outputBiases){
+        this.hiddenWeights = hiddenWeights;
+        this.hiddenBiases = hiddenBiases;
+        this.outputWeights = outputWeights;
+        this.outputBiases = outputBiases;
+        this.inputDimension = hiddenWeights.length;
+        this.hiddenDimension = hiddenWeights[0].length;
+        this.outputDimension = outputWeights[0].length;
     }
     /*
     public ffnn(File file) throws Exception {
@@ -121,7 +133,7 @@ public class ffnn {
 
     @Override
     public String toString() {
-        return Arrays.deepToString(this.hiddenWeights) + "\n" + Arrays.deepToString(this.outputWeights) + "\n"+ Arrays.toString(this.hiddenBiases) + "\n" +  Arrays.toString(this.outputBiases);
+        return Arrays.deepToString(this.hiddenWeights) + "\n" + Arrays.deepToString(this.outputWeights) + "\n"+ Arrays.toString(this.hiddenBiases) + "\n" +  Arrays.toString(this.outputBiases)  + "\n";
     }
 
     public static ffnn fromString(String s) {
@@ -160,4 +172,9 @@ public class ffnn {
         return array;
     }
 
+
+    @Override
+    public int compareTo(ffnn b) {
+        return Double.compare( b.fitness, this.fitness);
+    }
 }
