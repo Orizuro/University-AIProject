@@ -3,8 +3,11 @@ import breakout.BreakoutBoard;
 import ffnn.ffnn;
 import ffnn.ffnnFile;
 import utils.GameController;
+import ffnn.GameControler_breakout;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.concurrent.Future;
 
 public class Main {
 
@@ -18,11 +21,16 @@ public class Main {
         };
         Breakout a = new Breakout(e, 1);
         */
-        ffnn a = new ffnn(3,3,3);
+        ffnn a = new ffnn(7,5,2);
         File test = ffnnFile.createFile("test");
         ffnnFile.writeFfnnToFile(test, a);
         ffnn b = ffnnFile.readFfnnFromFile(test);
-        System.out.println(b.toString());
+        GameControler_breakout g = new GameControler_breakout(a);
+        Breakout d = new Breakout(g,12);
+        BreakoutBoard h =  new BreakoutBoard(g, false, 12);
+        h.runSimulation();
+        System.out.println( h.getFitness());
+
     }
 
     private double headLess(GameController nn, int seed){

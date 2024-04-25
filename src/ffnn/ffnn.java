@@ -1,6 +1,12 @@
 package ffnn;
+import breakout.BreakoutBoard;
+
+import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
+
+import static java.lang.Math.exp;
+
 //1. Initialization
 //Create Network: Function to initialize a new neural network with specified parameters such as number of layers, number of neurons per layer, activation functions, etc.
 //2. Configuration
@@ -16,7 +22,7 @@ import java.util.Random;
 //Save Model: Function to save the model's architecture and weights.
 //Load Model: Function to load a saved model.
 public class ffnn {
-    private final int inputDimension;
+    private int inputDimension;
     private int hiddenDimension;
     private int outputDimension;
     private double[][] hiddenWeights;
@@ -38,7 +44,13 @@ public class ffnn {
         this.outputDimension = outputDimension;
         initializeWithRandomValues();
     }
-
+    /*
+    public ffnn(File file) throws Exception {
+        ffnn a = ffnnFile.readFfnnFromFile(file);
+        System.out.println(a.toString());
+        this.nn = a;
+    }
+    */
     public void initializeWithRandomValues(){
         this.hiddenWeights = new double[inputDimension][hiddenDimension];
         this.outputWeights = new double[hiddenDimension][outputDimension];
@@ -72,6 +84,40 @@ public class ffnn {
         */
 
     }
+    private double sigmoid(double input){
+        return ( 1 / (1 + exp(-input)));
+    }
+
+    public int forward(int[] inputArray){
+        double[] hiddenOutputValue = new double[this.hiddenDimension];
+        double[] outputOutputValue = new double[this.outputDimension];
+
+        if(inputArray.length > this.inputDimension) {
+            throw new RuntimeException("Input can't be bigger than inputDimension");
+        }
+        for(int j = 0; j < this.hiddenDimension; j++){
+            double hiddenInputValue = 0;
+            for(int i = 0; i < this.inputDimension; i++){
+                hiddenInputValue += this.hiddenWeights[i][j] * inputArray[i];
+            }
+            hiddenInputValue += hiddenBiases[j];
+            hiddenOutputValue[j] = sigmoid(hiddenInputValue);
+        }
+        for(int j = 0; j < this.outputDimension; j++){
+            double outputInputValue = 0;
+            for(int i = 0; i < this.hiddenDimension; i++){
+                outputInputValue += this.outputWeights[i][j] * hiddenOutputValue[i];
+            }
+            outputInputValue += outputBiases[j];
+            outputOutputValue[j] = sigmoid(outputInputValue);
+        }
+        if(outputOutputValue[ 0 ] > outputOutputValue[ 1 ]){
+            return BreakoutBoard.LEFT;
+        }else{
+            return BreakoutBoard.RIGHT;
+        }
+    }
+
 
     @Override
     public String toString() {
@@ -84,8 +130,7 @@ public class ffnn {
         double[][] outputWeights = parseWeights(parts[1]);
         double[] hiddenBiases = parseBiases(parts[2]);
         double[] outputBiases = parseBiases(parts[3]);
-
-        ffnn network = new ffnn(hiddenWeights[0].length, hiddenWeights.length, outputWeights.length);
+        ffnn network = new ffnn(hiddenWeights.length, hiddenWeights[0].length, outputWeights[0].length);
         network.hiddenWeights = hiddenWeights;
         network.outputWeights = outputWeights;
         network.hiddenBiases = hiddenBiases;
