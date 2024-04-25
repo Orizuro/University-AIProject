@@ -20,6 +20,18 @@ public class Main {
         };
         Breakout a = new Breakout(e, 1);
         */
+        ffnn a = new ffnn(7,5,2);
+        File test = ffnnFile.createFile("test");
+        ffnnFile.writeFfnnToFile(test, a);
+        ffnn b = ffnnFile.readFfnnFromFile(test);
+        GameControler_breakout g = new GameControler_breakout(a);
+        //Breakout d = new Breakout(g,12);
+        BreakoutBoard h =  new BreakoutBoard(g, false, 12);
+        h.runSimulation();
+        System.out.println(b + " \n");
+        b.scrambleMutation(20.0);
+        System.out.println(b);
+        System.out.println( h.getFitness());
 
         Train t = new Train();
         t.trainPopulation();

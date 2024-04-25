@@ -37,7 +37,7 @@ public class ffnn implements Comparable<ffnn> {
 
 
     public double randomValue() {
-        return randomLeftBoundary + ( randomRightBoundary - randomLeftBoundary) * new Random().nextDouble();
+        return randomLeftBoundary + (randomRightBoundary - randomLeftBoundary) * new Random().nextDouble();
     }
 
     public ffnn(int inputDimension, int hiddenDimension, int outputDimension) {
@@ -177,4 +177,77 @@ public class ffnn implements Comparable<ffnn> {
     public int compareTo(ffnn b) {
         return Double.compare( b.fitness, this.fitness);
     }
+
+    public void scrambleMutation(double percentage) {
+        if (percentage <= 0.0 || percentage > 50.0) {         //não faz sentido ser acima de 50%
+            return;
+        } else {
+
+            // double[][] hiddenWeights
+            int kHW = (int) (hiddenWeights.length * percentage);
+            int conseq = 0;
+            boolean mutate = false;
+
+            for (int i = 0; i < hiddenWeights.length; i++) {
+                for (int j = 0; j < hiddenWeights[0].length; j++) {
+                    if (j % kHW == 0 && conseq == 0) {
+                        hiddenWeights[i][j] = randomValue();
+                        mutate = true;
+                        conseq++;
+
+                        if (mutate && conseq < kHW && j + 1 < hiddenWeights[0].length) {
+                            hiddenWeights[i][j + 1] = randomValue();
+                            conseq++;
+                        }
+                        if (conseq == kHW && j + 1 < hiddenWeights[0].length) {
+                            mutate = false;
+                        }
+                    }
+                }
+                conseq = 0;
+            }
+
+        }
+
+        // double[] hiddenBiases;
+
+
+
+        // double[][] outputWeights;
+        int kOW = (int) (outputWeights.length * percentage);
+        int conseqOW = 0;
+        boolean mutate = false;
+
+        for (int i = 0; i < outputWeights.length; i++) {
+            for (int j = 0; j < outputWeights[0].length; j++) {
+                if (j % kOW == 0 && conseqOW == 0) {
+                    outputWeights[i][j] = randomValue();
+                    mutate = true;
+                    conseqOW++;
+
+                    if (mutate && conseqOW < kOW && j + 1 < outputWeights[0].length) {
+                        outputWeights[i][j + 1] = randomValue();
+                        conseqOW++;
+                    }
+                    if (conseqOW == kOW && j + 1 < outputWeights[0].length) {
+                        mutate = false;
+                    }
+                }
+            }
+            conseqOW = 0;
+        }
+
+    }
+
+
+        //double[] outputBiases;
 }
+
+
+
+
+
+
+
+
+

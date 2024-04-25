@@ -10,8 +10,6 @@ Mutation Algorithm
 
     1.Selection
         Depends of the fitness
-
-    2.CrossOver
     [fitness: 0-80]
         Tournament Selection{
             • São selecionados K indíviduos de uma população de forma aleatória
@@ -27,6 +25,9 @@ Mutation Algorithm
             probabilidade.
             • Abordagem pouco elitista.
         }
+
+    2.CrossOver
+    K - Point Crossover (K= 3):
 
 
     3.Mutation
