@@ -1,7 +1,6 @@
 package ffnn;
 import breakout.BreakoutBoard;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -35,7 +34,7 @@ public class ffnn {
 
 
     public double randomValue() {
-        return randomLeftBoundary + ( randomRightBoundary - randomLeftBoundary) * new Random().nextDouble();
+        return randomLeftBoundary + (randomRightBoundary - randomLeftBoundary) * new Random().nextDouble();
     }
 
     public ffnn(int inputDimension, int hiddenDimension, int outputDimension) {
@@ -44,6 +43,7 @@ public class ffnn {
         this.outputDimension = outputDimension;
         initializeWithRandomValues();
     }
+
     /*
     public ffnn(File file) throws Exception {
         ffnn a = ffnnFile.readFfnnFromFile(file);
@@ -51,29 +51,29 @@ public class ffnn {
         this.nn = a;
     }
     */
-    public void initializeWithRandomValues(){
+    public void initializeWithRandomValues() {
         this.hiddenWeights = new double[inputDimension][hiddenDimension];
         this.outputWeights = new double[hiddenDimension][outputDimension];
 
         this.hiddenBiases = new double[hiddenDimension];
         this.outputBiases = new double[outputDimension];
 
-        for( int i = 0 ; i<inputDimension; i++){
-            for(int j = 0; j < hiddenDimension; j++){
+        for (int i = 0; i < inputDimension; i++) {
+            for (int j = 0; j < hiddenDimension; j++) {
 
-                this.hiddenWeights[i][j] =  randomValue();
+                this.hiddenWeights[i][j] = randomValue();
             }
         }
-        for( int i = 0 ; i<hiddenDimension; i++){
-            for(int j = 0; j < outputDimension; j++){
+        for (int i = 0; i < hiddenDimension; i++) {
+            for (int j = 0; j < outputDimension; j++) {
 
-                this.outputWeights[i][j] =  randomValue();
+                this.outputWeights[i][j] = randomValue();
             }
         }
-        for(int i = 0; i<hiddenDimension; i++){
+        for (int i = 0; i < hiddenDimension; i++) {
             this.hiddenBiases[i] = randomValue();
         }
-        for(int i = 0; i<outputDimension; i++){
+        for (int i = 0; i < outputDimension; i++) {
             this.outputBiases[i] = randomValue();
         }
         /*
@@ -84,36 +84,37 @@ public class ffnn {
         */
 
     }
-    private double sigmoid(double input){
-        return ( 1 / (1 + exp(-input)));
+
+    private double sigmoid(double input) {
+        return (1 / (1 + exp(-input)));
     }
 
-    public int forward(int[] inputArray){
+    public int forward(int[] inputArray) {
         double[] hiddenOutputValue = new double[this.hiddenDimension];
         double[] outputOutputValue = new double[this.outputDimension];
 
-        if(inputArray.length > this.inputDimension) {
+        if (inputArray.length > this.inputDimension) {
             throw new RuntimeException("Input can't be bigger than inputDimension");
         }
-        for(int j = 0; j < this.hiddenDimension; j++){
+        for (int j = 0; j < this.hiddenDimension; j++) {
             double hiddenInputValue = 0;
-            for(int i = 0; i < this.inputDimension; i++){
+            for (int i = 0; i < this.inputDimension; i++) {
                 hiddenInputValue += this.hiddenWeights[i][j] * inputArray[i];
             }
             hiddenInputValue += hiddenBiases[j];
             hiddenOutputValue[j] = sigmoid(hiddenInputValue);
         }
-        for(int j = 0; j < this.outputDimension; j++){
+        for (int j = 0; j < this.outputDimension; j++) {
             double outputInputValue = 0;
-            for(int i = 0; i < this.hiddenDimension; i++){
+            for (int i = 0; i < this.hiddenDimension; i++) {
                 outputInputValue += this.outputWeights[i][j] * hiddenOutputValue[i];
             }
             outputInputValue += outputBiases[j];
             outputOutputValue[j] = sigmoid(outputInputValue);
         }
-        if(outputOutputValue[ 0 ] > outputOutputValue[ 1 ]){
+        if (outputOutputValue[0] > outputOutputValue[1]) {
             return BreakoutBoard.LEFT;
-        }else{
+        } else {
             return BreakoutBoard.RIGHT;
         }
     }
@@ -121,7 +122,7 @@ public class ffnn {
 
     @Override
     public String toString() {
-        return Arrays.deepToString(this.hiddenWeights) + "\n" + Arrays.deepToString(this.outputWeights) + "\n"+ Arrays.toString(this.hiddenBiases) + "\n" +  Arrays.toString(this.outputBiases);
+        return Arrays.deepToString(this.hiddenWeights) + "\n" + Arrays.deepToString(this.outputWeights) + "\n" + Arrays.toString(this.hiddenBiases) + "\n" + Arrays.toString(this.outputBiases);
     }
 
     public static ffnn fromString(String s) {
@@ -160,4 +161,78 @@ public class ffnn {
         return array;
     }
 
+    public void scrambleMutation(double percentage) {
+        if (percentage <= 0.0 || percentage > 50.0) {         //não faz sentido ser acima de 50%
+            return;
+        } else {
+
+            // double[][] hiddenWeights
+            int kHW = (int) (hiddenWeights.length * percentage);
+            int conseq = 0;
+            boolean mutate = false;
+
+            for (int i = 0; i < hiddenWeights.length; i++) {
+                for (int j = 0; j < hiddenWeights[0].length; j++) {
+                    if (j % kHW == 0 && conseq == 0) {
+                        hiddenWeights[i][j] = randomValue();
+                        mutate = true;
+                        conseq++;
+
+                        if (mutate && conseq < kHW && j + 1 < hiddenWeights[0].length) {
+                            hiddenWeights[i][j + 1] = randomValue();
+                            conseq++;
+                        }
+                        if (conseq == kHW && j + 1 < hiddenWeights[0].length) {
+                            mutate = false;
+                        }
+                    }
+                }
+                conseq = 0;
+            }
+
+        }
+
+        // double[] hiddenBiases;
+
+
+
+        // double[][] outputWeights;
+        int kOW = (int) (outputWeights.length * percentage);
+        int conseqOW = 0;
+        boolean mutate = false;
+
+        for (int i = 0; i < outputWeights.length; i++) {
+            for (int j = 0; j < outputWeights[0].length; j++) {
+                if (j % kOW == 0 && conseqOW == 0) {
+                    outputWeights[i][j] = randomValue();
+                    mutate = true;
+                    conseqOW++;
+
+                    if (mutate && conseqOW < kOW && j + 1 < outputWeights[0].length) {
+                        outputWeights[i][j + 1] = randomValue();
+                        conseqOW++;
+                    }
+                    if (conseqOW == kOW && j + 1 < outputWeights[0].length) {
+                        mutate = false;
+                    }
+                }
+            }
+            conseqOW = 0;
+        }
+
+    }
+
+
+        //double[] outputBiases;
+    }
+
+
+
+
+
+
 }
+
+
+
+

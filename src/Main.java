@@ -26,9 +26,12 @@ public class Main {
         ffnnFile.writeFfnnToFile(test, a);
         ffnn b = ffnnFile.readFfnnFromFile(test);
         GameControler_breakout g = new GameControler_breakout(a);
-        Breakout d = new Breakout(g,12);
+        //Breakout d = new Breakout(g,12);
         BreakoutBoard h =  new BreakoutBoard(g, false, 12);
         h.runSimulation();
+        System.out.println(b + " \n");
+        b.scrambleMutation(20.0);
+        System.out.println(b);
         System.out.println( h.getFitness());
 
     }
