@@ -14,11 +14,11 @@ public class ffnnFile {
         }
     }
 
-    public static void writeFfnnToFile(File file, ffnn nn) throws Exception {
+    public static void writeFfnnToFile(File file, ffnn nn, boolean append) throws Exception {
         if(file == null)
             throw new Exception("File can't be null");
         try {
-            FileWriter myWriter = new FileWriter(file.getName(),true);
+            FileWriter myWriter = new FileWriter(file.getName(),append);
             myWriter.write(nn.toString());
             myWriter.close();
         } catch (IOException e) {
@@ -30,7 +30,7 @@ public class ffnnFile {
         if(file == null)
             throw new Exception("File can't be null");
         for(int i = 0; i< nn.length; i++){
-            writeFfnnToFile(file, nn[i]);
+            writeFfnnToFile(file, nn[i], true);
         }
     }
 

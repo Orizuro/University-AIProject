@@ -12,49 +12,38 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         /*
-        GameController e = new GameController() {
-            @Override
-            public int nextMove(int[] currentState) {
-                return 0;
-            }
-        };
-        Breakout a = new Breakout(e, 1);
-        */
         ffnn a = new ffnn(7,5,2);
-        File test = ffnnFile.createFile("test");
+
         ffnnFile.writeFfnnToFile(test, a);
-        ffnn b = ffnnFile.readFfnnFromFile(test);
+        ffnn b = ffnnFile.readFfnnFromFileSingle(test);
         GameControler_breakout g = new GameControler_breakout(a);
         //Breakout d = new Breakout(g,12);
-        BreakoutBoard h =  new BreakoutBoard(g, false, 12);
-        h.runSimulation();
-        System.out.println(b + " \n");
-        b.scrambleMutation(20.0);
+        System.out.println(b );
+        b.scrambleMutationV2(0.2);
         System.out.println(b);
-        System.out.println( h.getFitness());
+        File test = ffnnFile.createFile("test");
+        ffnn b = ffnnFile.readFfnnFromFileSingle(test);
+        GameControler_breakout g = new GameControler_breakout(b);
+        Breakout d = new Breakout(g,12);
 
+
+        */
+        File test = ffnnFile.createFile("test1");
         Train t = new Train();
-        t.trainPopulation();
-        File f = ffnnFile.createFile("testpopulation");
-        ffnn best = ffnnFile.readFfnnFromFileSingle(f);
-        GameControler_breakout gameControler = new GameControler_breakout(best);
-        BreakoutBoard board =  new BreakoutBoard(gameControler, false, 12);
-        board.runSimulation();
-        System.out.println("------");
-        System.out.println(board.getFitness());
-        //File f = ffnnFile.createFile("testpopulation");
-        //ffnnFile.writeFfnnToFileTotal(f, t.initialPopulation);
+        int i = 0;
+        t.trainPopulation(i,test);
+
 
     }
 
-    private double headLess(GameController nn, int seed){
+    private double headLess(GameController nn, int seed) {
         BreakoutBoard b = new BreakoutBoard(nn, false, seed);
         b.setSeed(seed);
         b.runSimulation();
         return b.getFitness();
     }
 
-    private void headFull(GameController nn, int seed){
+    private void headFull(GameController nn, int seed) {
         Breakout a = new Breakout(nn, seed);
     }
 }

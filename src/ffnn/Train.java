@@ -10,10 +10,12 @@ import breakout.BreakoutBoard;
 
 public class Train {
 
-    private final int CHILD_TO_BE_CREATED = 100;
-    private final int CANDIDATES_SELECTION = 1000;
-    private final int INITIAL_POPULATION = 10000;
+    private final int CHILD_TO_BE_CREATED = 1000;
+    private final int CANDIDATES_SELECTION = 600;
+    private final int INITIAL_POPULATION = 1000;
     private final int CROSSOVER_SPLIT = 4;
+    private final double POP_PROBABILITY_OF_MUTATION = 0.6;
+    private final double PROB_INDIVUDUAL_MUTATION = 0.2;
     public ffnn[] initialPopulation;
 
     public Train(){
@@ -27,19 +29,37 @@ public class Train {
         this.initialPopulation = ffnnFile.readFfnnFromFileTotal(file);
     }
 
-    public void trainPopulation() throws Exception {
-        for(int i = 0; i< this.initialPopulation.length; i ++){
-            GameControler_breakout gameControler = new GameControler_breakout(initialPopulation[i]);
-            BreakoutBoard board =  new BreakoutBoard(gameControler, false, 12);
+    public void trainPopulation(int i, File file) throws Exception {
+        double bestFitness = 0;
+        for (ffnn ffnn : this.initialPopulation) {
+            GameControler_breakout gameControler = new GameControler_breakout(ffnn);
+            BreakoutBoard board = new BreakoutBoard(gameControler, false, 12);
             board.runSimulation();
-            this.initialPopulation[i].fitness = board.getFitness();
-            System.out.println(board.getFitness());
+            ffnn.fitness = board.getFitness();
         }
         ffnn[] childs = multipleSelection(this.initialPopulation);
+        for(ffnn child : childs){
+            if(POP_PROBABILITY_OF_MUTATION * 10 <= randomNumber(10))
+                child.scrambleMutation(PROB_INDIVUDUAL_MUTATION);
+        }
+        Arrays.sort(this.initialPopulation);
+        System.out.println("Population number: " + i );
+        System.out.println(this.initialPopulation[0].fitness);
+        System.out.println(this.initialPopulation[1].fitness);
+        System.out.println(this.initialPopulation[2].fitness);
+        System.out.println("----------------");
+
+        if(this.initialPopulation[0].fitness > bestFitness){
+            ffnnFile.writeFfnnToFile(file,this.initialPopulation[0] , false);
+        }
+        this.initialPopulation = childs;
+        trainPopulation(i+1, file);
+
+
 
     }
-    private int randomNumber(){
-        return ThreadLocalRandom.current().nextInt(0, INITIAL_POPULATION );
+    private int randomNumber(int max){
+        return ThreadLocalRandom.current().nextInt(0, max );
     }
 
     private ffnn[] multipleSelection(ffnn[] population){
@@ -55,7 +75,7 @@ public class Train {
     private ffnn[] selection(ffnn[] population){
         ffnn[] selectedCandidates = new ffnn[CANDIDATES_SELECTION];
         for (int i = 0; i< CANDIDATES_SELECTION  ; i++){
-            selectedCandidates[i] = population[randomNumber()];
+            selectedCandidates[i] = population[randomNumber(INITIAL_POPULATION)];
         }
         Arrays.sort(selectedCandidates);
         return new ffnn[]{selectedCandidates[0], selectedCandidates[1]};
