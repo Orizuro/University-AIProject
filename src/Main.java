@@ -7,6 +7,8 @@ import ffnn.Train;
 import ffnn.GameControler_breakout;
 
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class Main {
 
@@ -28,10 +30,36 @@ public class Main {
 
 
         */
-        File test = ffnnFile.createFile("test1");
-        Train t = new Train();
-        int i = 0;
-        t.trainPopulation(i,test);
+        File file = ffnnFile.createFile("bulk");
+        File file2 = ffnnFile.createFile("best");
+        /*
+        for(int i  = 0; i < 1000; i++){
+            System.out.println("Number of train:" + i);
+            Train t = new Train();
+            //int j = 0;
+            ffnn best = t.trainPopulation(file);
+            System.out.println("Fitness:" + best.fitness);
+            ffnnFile.writeFfnnToFile(file, best, true);
+        }
+        System.out.println("Done");
+         */
+        ffnn[] recovered = ffnnFile.readFfnnFromFileTotal(file);
+        for(ffnn ffnn : recovered){
+            GameControler_breakout gameControler = new GameControler_breakout(ffnn);
+            BreakoutBoard board = new BreakoutBoard(gameControler, false, 12);
+            board.runSimulation();
+            ffnn.fitness = board.getFitness();
+        }
+        Arrays.sort(recovered);
+        ffnn best = recovered[0];
+        System.out.println(best.fitness);
+        ffnnFile.writeFfnnToFile(file2, best, false );
+        GameControler_breakout g = new GameControler_breakout(best);
+        Breakout d = new Breakout(g,12);
+
+
+
+
 
 
     }

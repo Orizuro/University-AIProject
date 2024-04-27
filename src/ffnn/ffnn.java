@@ -167,12 +167,13 @@ public class ffnn implements Comparable<ffnn> {
     }
 
     private int randomNumberMax(int max) {
+        if(max == 0)
+            return 0;
         return ThreadLocalRandom.current().nextInt(0, max);
     }
 
     public void scrambleMutation(double percentage) {
-        if (percentage <= 0.0 || percentage > 50.0)
-            return;
+
         scrambleMutationMatrix(percentage, this.hiddenWeights);
         scrambleMutationMatrix(percentage, this.outputWeights);
         scrambleMutationArray(percentage, this.hiddenBiases);
