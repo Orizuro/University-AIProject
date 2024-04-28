@@ -43,13 +43,6 @@ public class ffnn implements Comparable<ffnn> {
         this.outputDimension = outputWeights[0].length;
     }
 
-    /*
-    public ffnn(File file) throws Exception {
-        ffnn a = ffnnFile.readFfnnFromFile(file);
-        System.out.println(a.toString());
-        this.nn = a;
-    }
-    */
     public void initializeWithRandomValues() {
         this.hiddenWeights = new double[inputDimension][hiddenDimension];
         this.outputWeights = new double[hiddenDimension][outputDimension];
@@ -75,12 +68,6 @@ public class ffnn implements Comparable<ffnn> {
         for (int i = 0; i < outputDimension; i++) {
             this.outputBiases[i] = randomValue();
         }
-        /*
-        System.out.println(Arrays.deepToString(hiddenWeights));
-        System.out.println(Arrays.deepToString(outputWeights));
-        System.out.println(Arrays.toString(hiddenBiases));
-        System.out.println(Arrays.toString(outputBiases));
-        */
 
     }
 

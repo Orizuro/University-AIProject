@@ -29,8 +29,8 @@ public class ffnnFile {
     public static void writeFfnnToFileTotal(File file, ffnn[] nn) throws Exception {
         if(file == null)
             throw new Exception("File can't be null");
-        for(int i = 0; i< nn.length; i++){
-            writeFfnnToFile(file, nn[i], true);
+        for (ffnn ffnn : nn) {
+            writeFfnnToFile(file, ffnn, true);
         }
     }
 
