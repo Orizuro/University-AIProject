@@ -1,3 +1,4 @@
+import breakout.Breakout;
 import breakout.BreakoutBoard;
 import ffnn.ffnn;
 import ffnn.ffnnFile;
@@ -9,11 +10,18 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) throws Exception {
-
-        train("test");
+        File file = ffnnFile.createFile("best");
+        //train("test");
         // To test the fitness score of the file best just uncomment the next 2 lines;
-        //File file = ffnnFile.createFile("best");
+
         //testFileBest(file);
+
+        //To test with gui any of the ffnn in the file, just change the array number
+        //ffnn[] best = ffnnFile.readFfnnFromFileTotal(file);
+        //ffnn max  = best[0]; //<-- Change to select the ffnn to test
+        //GameControler_breakout g = new GameControler_breakout(max);
+        //Breakout b = new Breakout(g,12);
+
 
 
     }
